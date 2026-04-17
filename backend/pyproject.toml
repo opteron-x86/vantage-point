@@ -34,7 +34,6 @@ dependencies = [
 
     # Scheduler
     "apscheduler>=3.10.4",
-    "pytz"
 ]
 
 [project.optional-dependencies]

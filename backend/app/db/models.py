@@ -294,3 +294,29 @@ class AIConfig(Base):
     updated_at: Mapped[datetime] = mapped_column(
         DateTime(timezone=True), default=_utcnow, onupdate=_utcnow, nullable=False,
     )
+
+
+# ---------------------------------------------------------------------------
+# Ticker metadata (company name, sector, industry)
+# ---------------------------------------------------------------------------
+
+class TickerInfo(Base):
+    """
+    Company-level metadata for a ticker. Populated from Finnhub's stock
+    profile endpoint on first watchlist-add and cached indefinitely.
+    """
+    __tablename__ = "ticker_info"
+
+    ticker: Mapped[str] = mapped_column(String(10), primary_key=True)
+    name: Mapped[str | None] = mapped_column(String(200), nullable=True)
+    exchange: Mapped[str | None] = mapped_column(String(32), nullable=True)
+    sector: Mapped[str | None] = mapped_column(String(64), nullable=True)
+    industry: Mapped[str | None] = mapped_column(String(128), nullable=True)
+    country: Mapped[str | None] = mapped_column(String(4), nullable=True)
+    currency: Mapped[str | None] = mapped_column(String(4), nullable=True)
+    logo_url: Mapped[str | None] = mapped_column(String(512), nullable=True)
+    weburl: Mapped[str | None] = mapped_column(String(512), nullable=True)
+    market_cap_usd: Mapped[float | None] = mapped_column(Float, nullable=True)
+    updated_at: Mapped[datetime] = mapped_column(
+        DateTime(timezone=True), default=_utcnow, onupdate=_utcnow, nullable=False,
+    )

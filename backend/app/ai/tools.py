@@ -19,6 +19,7 @@ from app.services import (
     news,
     settings as settings_service,
     technicals,
+    ticker_info,
     watchlist,
 )
 
@@ -76,6 +77,15 @@ def _get_account_context(user_id: int) -> dict:
         return settings_service.get_account_context(db, user_id=user_id)
 
 
+def _get_ticker_info(ticker: str) -> dict:
+    with SessionLocal() as db:
+        t = ticker.upper().strip()
+        row = ticker_info.get(db, t)
+        if row is None or not row.name:
+            row = ticker_info.fetch_and_store(db, t)
+        return ticker_info.serialize(row) if row else {"ticker": t}
+
+
 # ---------------------------------------------------------------------------
 # Schemas (Anthropic format; OpenRouter client converts as needed)
 # ---------------------------------------------------------------------------
@@ -85,6 +95,22 @@ TOOL_SCHEMAS: list[dict[str, Any]] = [
         "name": "list_watchlist",
         "description": "Return the user's tracked tickers.",
         "input_schema": {"type": "object", "properties": {}},
+    },
+    {
+        "name": "get_ticker_info",
+        "description": (
+            "Get company metadata for a ticker: full company name, sector, "
+            "industry, exchange, country, market cap. Call this when first "
+            "discussing any ticker so you can refer to it by name "
+            "(e.g. 'Apple (AAPL)' instead of just 'AAPL')."
+        ),
+        "input_schema": {
+            "type": "object",
+            "properties": {
+                "ticker": {"type": "string", "description": "Stock ticker symbol"},
+            },
+            "required": ["ticker"],
+        },
     },
     {
         "name": "get_price_history",
@@ -187,6 +213,8 @@ def dispatch_tool(name: str, tool_input: dict, *, user_id: int) -> dict:
     try:
         if name == "list_watchlist":
             return _list_watchlist(user_id=user_id)
+        if name == "get_ticker_info":
+            return _get_ticker_info(**tool_input)
         if name == "get_price_history":
             return _get_price_history(**tool_input)
         if name == "get_recent_news":

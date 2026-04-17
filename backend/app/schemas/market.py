@@ -68,3 +68,18 @@ class TechnicalsOut(BaseModel):
     period_low: float | None = None
     bars_analyzed: int | None = None
     error: str | None = None
+
+
+# ---- Ticker profile ----
+
+class TickerInfoOut(BaseModel):
+    ticker: str
+    name: str | None = None
+    exchange: str | None = None
+    sector: str | None = None
+    industry: str | None = None
+    country: str | None = None
+    currency: str | None = None
+    logo_url: str | None = None
+    weburl: str | None = None
+    market_cap_usd: float | None = None

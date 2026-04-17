@@ -30,3 +30,12 @@ export function useTickerTechnicals(ticker: string) {
     enabled: Boolean(ticker),
   });
 }
+
+export function useTickerInfo(ticker: string) {
+  return useQuery({
+    queryKey: ["ticker-info", ticker],
+    queryFn: () => marketApi.info(ticker),
+    enabled: Boolean(ticker),
+    staleTime: 1000 * 60 * 60 * 24,
+  });
+}

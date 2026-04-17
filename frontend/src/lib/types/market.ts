@@ -5,6 +5,22 @@ export type WatchlistItem = {
   ticker: string;
   position: number;
   added_at: string;
+  name?: string | null;
+  sector?: string | null;
+  industry?: string | null;
+};
+
+export type TickerInfo = {
+  ticker: string;
+  name?: string | null;
+  exchange?: string | null;
+  sector?: string | null;
+  industry?: string | null;
+  country?: string | null;
+  currency?: string | null;
+  logo_url?: string | null;
+  weburl?: string | null;
+  market_cap_usd?: number | null;
 };
 
 export type Bar = {

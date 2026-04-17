@@ -1,5 +1,10 @@
 import { apiFetch } from "@/lib/api/client";
-import type { NewsList, PriceHistory, Technicals } from "@/lib/types/market";
+import type {
+  NewsList,
+  PriceHistory,
+  Technicals,
+  TickerInfo,
+} from "@/lib/types/market";
 
 export const marketApi = {
   bars(ticker: string, days = 30): Promise<PriceHistory> {
@@ -20,5 +25,9 @@ export const marketApi = {
 
   technicals(ticker: string): Promise<Technicals> {
     return apiFetch<Technicals>(`/api/market/technicals/${ticker}`);
+  },
+
+  info(ticker: string): Promise<TickerInfo> {
+    return apiFetch<TickerInfo>(`/api/market/info/${ticker}`);
   },
 };

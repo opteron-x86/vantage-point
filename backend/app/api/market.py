@@ -1,4 +1,4 @@
-"""Market data endpoints: bars, news, technicals."""
+"""Market data endpoints: bars, news, technicals, ticker profile."""
 
 from fastapi import APIRouter, Query
 
@@ -9,10 +9,25 @@ from app.schemas.market import (
     NewsListOut,
     PriceHistoryOut,
     TechnicalsOut,
+    TickerInfoOut,
 )
-from app.services import market_data, news, technicals
+from app.services import market_data, news, technicals, ticker_info
 
 router = APIRouter()
+
+
+@router.get("/info/{ticker}", response_model=TickerInfoOut)
+def get_ticker_info(
+    ticker: str, db: DbSession, _: CurrentUser
+) -> TickerInfoOut:
+    """Company profile. Fetched lazily if missing."""
+    t = ticker.upper().strip()
+    row = ticker_info.get(db, t)
+    if row is None or not row.name:
+        row = ticker_info.fetch_and_store(db, t)
+    if row is None:
+        return TickerInfoOut(ticker=t)
+    return TickerInfoOut(**ticker_info.serialize(row))
 
 
 @router.get("/bars/{ticker}", response_model=PriceHistoryOut)

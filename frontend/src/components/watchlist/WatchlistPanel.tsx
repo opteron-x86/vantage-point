@@ -70,6 +70,7 @@ export function WatchlistPanel({ selectedTicker, onSelect }: Props) {
               <WatchlistRow
                 key={item.ticker}
                 ticker={item.ticker}
+                name={item.name}
                 selected={selectedTicker === item.ticker}
                 onSelect={onSelect}
                 onRemove={(t) => remove.mutate(t)}

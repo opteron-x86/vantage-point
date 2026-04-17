@@ -9,6 +9,9 @@ class WatchlistItemOut(BaseModel):
     ticker: str
     position: int
     added_at: datetime
+    name: str | None = None
+    sector: str | None = None
+    industry: str | None = None
 
     class Config:
         from_attributes = True

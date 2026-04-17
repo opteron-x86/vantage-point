@@ -14,12 +14,13 @@ import { cn } from "@/lib/utils/cn";
 
 type Props = {
   ticker: string;
+  name?: string | null;
   selected?: boolean;
   onSelect?: (ticker: string) => void;
   onRemove?: (ticker: string) => void;
 };
 
-export function WatchlistRow({ ticker, selected, onSelect, onRemove }: Props) {
+export function WatchlistRow({ ticker, name, selected, onSelect, onRemove }: Props) {
   const { data, isLoading } = useTickerBars(ticker, 30);
 
   const closes = data?.bars.map((b) => b.close) ?? [];
@@ -38,7 +39,6 @@ export function WatchlistRow({ ticker, selected, onSelect, onRemove }: Props) {
       role="button"
       tabIndex={0}
     >
-      {/* Left accent bar when selected */}
       <div
         className={cn(
           "absolute inset-y-0 left-0 w-[2px] transition-colors",
@@ -49,10 +49,17 @@ export function WatchlistRow({ ticker, selected, onSelect, onRemove }: Props) {
 
       <div className="min-w-0 flex-1">
         <div className="flex items-baseline justify-between gap-2">
-          <span className="font-mono text-sm font-medium tracking-tight text-fg">
-            {ticker}
-          </span>
-          <span className={cn("font-mono text-xs", signalTone(change))}>
+          <div className="flex min-w-0 items-baseline gap-2">
+            <span className="font-mono text-sm font-medium tracking-tight text-fg">
+              {ticker}
+            </span>
+            {name ? (
+              <span className="truncate text-[10px] text-fg-subtle" title={name}>
+                {name}
+              </span>
+            ) : null}
+          </div>
+          <span className={cn("shrink-0 font-mono text-xs", signalTone(change))}>
             {deltaGlyph(change)} {formatPercent(change)}
           </span>
         </div>

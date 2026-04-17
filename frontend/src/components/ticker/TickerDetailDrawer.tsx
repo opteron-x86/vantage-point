@@ -1,6 +1,6 @@
 "use client";
 
-import { X } from "lucide-react";
+import { ExternalLink, X } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
 
 import { NewsList } from "@/components/ticker/NewsList";
@@ -8,7 +8,7 @@ import { PriceChart } from "@/components/ticker/PriceChart";
 import { TechnicalsPanel } from "@/components/ticker/TechnicalsPanel";
 import { Button } from "@/components/ui";
 import { useDataAdmin } from "@/lib/hooks/useDataAdmin";
-import { useTickerBars } from "@/lib/hooks/useTickerData";
+import { useTickerBars, useTickerInfo } from "@/lib/hooks/useTickerData";
 import { cn } from "@/lib/utils/cn";
 import {
   deltaGlyph,
@@ -50,6 +50,7 @@ function expectedBars(days: number): number {
 export function TickerDetailDrawer({ ticker, onClose }: Props) {
   const [timeframe, setTimeframe] = useState<Timeframe>(TIMEFRAMES[0]);
   const { data, isLoading } = useTickerBars(ticker ?? "", timeframe.days);
+  const { data: info } = useTickerInfo(ticker ?? "");
   const { refreshTicker } = useDataAdmin();
 
   // Track which (ticker, timeframe) pairs we've already auto-backfilled
@@ -97,27 +98,60 @@ export function TickerDetailDrawer({ ticker, onClose }: Props) {
 
   return (
     <div className="flex h-full flex-col overflow-hidden">
-      {/* Header */}
-      <div className="flex items-baseline justify-between gap-4 border-b border-border-subtle px-5 py-4">
-        <div className="flex items-baseline gap-4">
-          <h1 className="font-mono text-2xl font-normal tracking-tight text-fg">
-            {ticker}
-          </h1>
-          <div className="flex items-baseline gap-2">
-            <span className="font-mono text-lg text-fg">
-              {showChartLoader ? "—" : formatPrice(latest)}
-            </span>
-            <span className={cn("font-mono text-sm", signalTone(change))}>
-              {deltaGlyph(change)} {formatPercent(change, { sign: true })}
-            </span>
-            <span className="font-mono text-[10px] uppercase tracking-wider text-fg-subtle">
-              {timeframe.label}
-            </span>
+      <div className="border-b border-border-subtle px-5 py-4">
+        <div className="flex items-start justify-between gap-4">
+          <div className="min-w-0 flex-1">
+            <div className="flex items-baseline gap-4">
+              <h1 className="font-mono text-2xl font-normal tracking-tight text-fg">
+                {ticker}
+              </h1>
+              <div className="flex items-baseline gap-2">
+                <span className="font-mono text-lg text-fg">
+                  {showChartLoader ? "—" : formatPrice(latest)}
+                </span>
+                <span className={cn("font-mono text-sm", signalTone(change))}>
+                  {deltaGlyph(change)} {formatPercent(change, { sign: true })}
+                </span>
+                <span className="font-mono text-[10px] uppercase tracking-wider text-fg-subtle">
+                  {timeframe.label}
+                </span>
+              </div>
+            </div>
+
+            {(info?.name || info?.sector) ? (
+              <div className="mt-1 flex items-center gap-2 text-[11px]">
+                {info.name ? (
+                  <span className="truncate text-fg-muted" title={info.name}>
+                    {info.name}
+                  </span>
+                ) : null}
+                {info.sector ? (
+                  <>
+                    <span className="text-fg-subtle" aria-hidden>·</span>
+                    <span className="truncate text-fg-subtle" title={info.sector}>
+                      {info.sector}
+                    </span>
+                  </>
+                ) : null}
+              </div>
+            ) : null}
+
+            <div className="mt-2 flex items-center gap-3">
+              <ExternalSiteLink
+                href={`https://finance.yahoo.com/quote/${ticker}/`}
+                label="Yahoo Finance"
+              />
+              <ExternalSiteLink
+                href={`https://www.cnbc.com/quotes/${ticker}`}
+                label="CNBC"
+              />
+            </div>
           </div>
+
+          <Button variant="ghost" size="sm" onClick={onClose} aria-label="Close">
+            <X className="h-3.5 w-3.5" />
+          </Button>
         </div>
-        <Button variant="ghost" size="sm" onClick={onClose} aria-label="Close">
-          <X className="h-3.5 w-3.5" />
-        </Button>
       </div>
 
       {/* Scrollable body */}
@@ -185,5 +219,19 @@ export function TickerDetailDrawer({ ticker, onClose }: Props) {
         </section>
       </div>
     </div>
+  );
+}
+
+function ExternalSiteLink({ href, label }: { href: string; label: string }) {
+  return (
+    <a
+      href={href}
+      target="_blank"
+      rel="noopener noreferrer"
+      className="inline-flex items-center gap-1 text-[11px] text-fg-subtle transition-colors hover:text-accent"
+    >
+      {label}
+      <ExternalLink className="h-2.5 w-2.5" />
+    </a>
   );
 }
