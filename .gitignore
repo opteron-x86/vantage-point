@@ -34,7 +34,6 @@ out/
 *.sqlite3
 briefings/
 chat_notes/
-logs/
 *.log
 
 # --- Editor / OS ---
