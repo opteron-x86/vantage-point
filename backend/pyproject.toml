@@ -1,0 +1,65 @@
+[project]
+name = "market-assistant-backend"
+version = "0.1.0"
+description = "Personal trading research assistant — FastAPI backend"
+requires-python = ">=3.12"
+
+dependencies = [
+    # Web
+    "fastapi>=0.115.0",
+    "uvicorn[standard]>=0.32.0",
+    "websockets>=13.1",
+
+    # Config / validation
+    "pydantic>=2.9.0",
+    "pydantic-settings>=2.6.0",
+    "python-dotenv>=1.0.0",
+
+    # Database
+    "sqlalchemy>=2.0.35",
+    "alembic>=1.13.3",
+    "psycopg[binary]>=3.2.3",
+
+    # Auth
+    "bcrypt>=4.2.0",
+    "pyjwt>=2.9.0",
+
+    # AI providers
+    "anthropic>=0.40.0",
+    "openai>=1.50.0",
+
+    # Market data / news
+    "alpaca-py>=0.33.0",
+    "finnhub-python>=2.4.20",
+
+    # Scheduler
+    "apscheduler>=3.10.4",
+]
+
+[project.optional-dependencies]
+dev = [
+    "ruff>=0.7.0",
+    "pytest>=8.3.0",
+    "pytest-asyncio>=0.24.0",
+    "httpx>=0.27.0",
+    "mypy>=1.13.0",
+]
+
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[tool.hatch.build.targets.wheel]
+packages = ["app"]
+
+[tool.ruff]
+line-length = 100
+target-version = "py312"
+
+[tool.ruff.lint]
+select = ["E", "F", "I", "B", "UP", "N", "SIM"]
+ignore = ["E501"]  # handled by formatter
+
+[tool.pytest.ini_options]
+asyncio_mode = "auto"
+testpaths = ["tests"]

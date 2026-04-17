@@ -1,0 +1,116 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/*
+ * Nord theme tokens.
+ *
+ * We layer semantic tokens on top of the raw Nord palette so components
+ * reference intent (bg-raised, fg-muted) rather than specific colors.
+ * Swapping themes later is then a matter of redefining these variables.
+ */
+@layer base {
+  :root {
+    /* Raw palette (Nord) — available via tailwind's nord-0..15 too */
+    --nord-0:  #2e3440;
+    --nord-1:  #3b4252;
+    --nord-2:  #434c5e;
+    --nord-3:  #4c566a;
+    --nord-4:  #d8dee9;
+    --nord-5:  #e5e9f0;
+    --nord-6:  #eceff4;
+    --nord-7:  #8fbcbb;
+    --nord-8:  #88c0d0;
+    --nord-9:  #81a1c1;
+    --nord-10: #5e81ac;
+    --nord-11: #bf616a;
+    --nord-12: #d08770;
+    --nord-13: #ebcb8b;
+    --nord-14: #a3be8c;
+    --nord-15: #b48ead;
+
+    /* Semantic tokens — prefer these in components */
+    --bg:           var(--nord-0);
+    --bg-raised:    #323846;          /* slightly lifted from nord-0 */
+    --bg-sunken:    #272c37;          /* one step darker for inset panels */
+
+    --surface:       var(--nord-1);
+    --surface-muted: #353c4a;
+    --surface-hover: #404859;
+
+    --border:         var(--nord-3);
+    --border-subtle:  #3b4252;
+    --border-strong:  var(--nord-4);
+
+    --fg:          var(--nord-6);
+    --fg-muted:    var(--nord-4);
+    --fg-subtle:   #7b8494;
+
+    --accent:      var(--nord-8);     /* frost cyan — primary accent */
+    --accent-cyan: var(--nord-7);
+    --accent-blue: var(--nord-10);
+
+    --signal-up:   var(--nord-14);    /* aurora green */
+    --signal-down: var(--nord-11);    /* aurora red */
+    --signal-warn: var(--nord-13);    /* aurora yellow */
+  }
+
+  html {
+    color-scheme: dark;
+  }
+
+  body {
+    background-color: var(--bg);
+    color: var(--fg);
+    font-feature-settings: "cv11", "ss01", "ss03";  /* Inter stylistic sets */
+    -webkit-font-smoothing: antialiased;
+    text-rendering: optimizeLegibility;
+  }
+
+  /* Tabular numerals by default on any element using the mono stack —
+     this is what makes price columns align perfectly. */
+  .font-mono,
+  code,
+  pre,
+  kbd {
+    font-variant-numeric: tabular-nums;
+  }
+
+  /* Subtle scrollbar to match the quiet aesthetic */
+  ::-webkit-scrollbar { width: 10px; height: 10px; }
+  ::-webkit-scrollbar-track { background: var(--bg-sunken); }
+  ::-webkit-scrollbar-thumb {
+    background: var(--surface-muted);
+    border: 2px solid var(--bg-sunken);
+    border-radius: 6px;
+  }
+  ::-webkit-scrollbar-thumb:hover { background: var(--surface-hover); }
+
+  /* Selection */
+  ::selection {
+    background: var(--accent);
+    color: var(--nord-0);
+  }
+
+  /* Focus ring — tasteful, not generic */
+  :focus-visible {
+    outline: 1px solid var(--accent);
+    outline-offset: 2px;
+  }
+}
+
+@layer components {
+  /* Grid background used on the login page for subtle visual texture */
+  .bg-grid {
+    background-image:
+      linear-gradient(to right, var(--border-subtle) 1px, transparent 1px),
+      linear-gradient(to bottom, var(--border-subtle) 1px, transparent 1px);
+    background-size: 32px 32px;
+    background-position: -1px -1px;
+  }
+
+  /* Hairline divider helper — 1px but softer than a plain border */
+  .hairline {
+    border-color: var(--border-subtle);
+  }
+}
