@@ -61,11 +61,7 @@ export type CreateEntryBody = {
   notes?: string | null;
 };
 
-export type UpdateEntryBody = Partial<
-  Omit<CreateEntryBody, "ticker"> & {
-    ticker?: never; // can't change ticker
-  }
->;
+export type UpdateEntryBody = Partial<Omit<CreateEntryBody, "ticker">>;
 
 export type CloseEntryBody = {
   exit_price: number;

@@ -149,7 +149,8 @@ export default function JournalPage() {
           <JournalEntryForm
             initial={dialog.entry}
             onSubmit={async (body) => {
-              await update.mutateAsync({ id: dialog.entry.id, body });
+              const { ticker: _ticker, ...updates } = body;
+              await update.mutateAsync({ id: dialog.entry.id, body: updates });
               closeDialog();
             }}
             onCancel={closeDialog}
