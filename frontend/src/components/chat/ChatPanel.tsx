@@ -123,6 +123,13 @@ function EmptyState() {
         <li>&ldquo;Walk me through NVDA&rsquo;s setup&rdquo;</li>
         <li>&ldquo;Explain RSI in the context of AAPL&rdquo;</li>
       </ul>
+      <p className="mt-6 text-[11px] text-fg-subtle">
+        New to the terminology?{" "}
+        <a href="/learn" className="text-accent hover:underline">
+          Start with the glossary
+        </a>
+        .
+      </p>
     </div>
   );
 }

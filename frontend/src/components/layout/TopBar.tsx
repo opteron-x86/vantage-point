@@ -1,6 +1,6 @@
 "use client";
 
-import { Activity, BookOpen, LogOut, Settings } from "lucide-react";
+import { Activity, BookOpen, GraduationCap, LogOut, Settings } from "lucide-react";
 import Link from "next/link";
 import type { Route } from "next";
 import { usePathname } from "next/navigation";
@@ -31,6 +31,10 @@ export function TopBar() {
           <NavLink href="/journal" active={pathname === "/journal"}>
             <BookOpen className="mr-1 inline h-3 w-3" />
             Journal
+          </NavLink>
+          <NavLink href="/learn" active={pathname === "/learn"}>
+            <GraduationCap className="mr-1 inline h-3 w-3" />
+            Learn
           </NavLink>
           <NavLink href="/logs" active={pathname === "/logs"}>
             <Activity className="mr-1 inline h-3 w-3" />
