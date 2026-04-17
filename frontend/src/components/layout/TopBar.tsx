@@ -1,7 +1,8 @@
 "use client";
 
 import { Activity, BookOpen, LogOut, Settings } from "lucide-react";
-import Link, { type LinkProps } from "next/link";
+import Link from "next/link";
+import type { Route } from "next";
 import { usePathname } from "next/navigation";
 
 import { Logo } from "@/components/layout/Logo";
@@ -67,7 +68,7 @@ function NavLink({
   children,
   active,
 }: {
-  href: LinkProps["href"];
+  href: Route;
   children: React.ReactNode;
   active: boolean;
 }) {
